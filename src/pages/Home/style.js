@@ -6,7 +6,7 @@ export const ContainerStyled = styled.div`
   height: 100%;
   width: 100%;
 
-  @media ${device.maxSm} {
+  @media ${device.maxXs} {
     padding: 1rem 1rem 0;
   }
 `;
