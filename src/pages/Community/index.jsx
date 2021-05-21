@@ -1,14 +1,15 @@
+import Menu from "../../components/Main/Menu";
 import Header from "../../components/Header";
 import { ContainerStyled } from "./style";
-import Main from "../../components/Main";
 
-const Home = () => {
+const Community = () => {
   return (
     <ContainerStyled>
       <Header />
-      <Main />
+      <Menu />
+      <h1>comunidade</h1>
     </ContainerStyled>
   );
 };
 
-export default Home;
+export default Community;

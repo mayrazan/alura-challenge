@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -76,6 +76,7 @@ const useStyles = makeStyles((theme) => ({
   },
   sectionMobile: {
     display: "flex",
+    marginLeft: "auto",
     [theme.breakpoints.up("sm")]: {
       display: "none",
     },
@@ -103,15 +104,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Header() {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [searchIconClicked, setSearchIconCliked] = useState(false);
 
   const classSectionDevice = classes.sectionTablet
     ? classes.sectionTablet
     : classes.sectionMobile;
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  const isInputOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -171,22 +172,29 @@ export default function Header() {
     </Menu>
   );
 
-  const mobileInputId = "primary-search-input-mobile";
-  const renderInput = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={mobileInputId}
-      keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
-      open={isInputOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <p>input</p>
-      </MenuItem>
-    </Menu>
-  );
+  const renderInput = () => {
+    return (
+      <>
+        <InputBase
+          placeholder="Busque por algo"
+          classes={{
+            root: classes.inputRoot,
+            input: classes.inputInput,
+          }}
+          inputProps={{ "aria-label": "search" }}
+        />
+        <IconButton
+          aria-label="show more"
+          aria-controls={mobileMenuId}
+          aria-haspopup="true"
+          onClick={() => setSearchIconCliked(false)}
+          color="inherit"
+        >
+          <SearchIcon />
+        </IconButton>
+      </>
+    );
+  };
 
   return (
     <div className={classes.grow}>
@@ -211,15 +219,19 @@ export default function Header() {
           </div>
 
           <div className={classes.sectionMobile}>
-            <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <SearchIcon />
-            </IconButton>
+            {searchIconClicked ? (
+              renderInput()
+            ) : (
+              <IconButton
+                aria-label="show more"
+                aria-controls={mobileMenuId}
+                aria-haspopup="true"
+                onClick={() => setSearchIconCliked(true)}
+                color="inherit"
+              >
+                <SearchIcon />
+              </IconButton>
+            )}
           </div>
 
           <div className={classSectionDevice}>
@@ -237,7 +249,6 @@ export default function Header() {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
-      {renderInput}
     </div>
   );
 }
